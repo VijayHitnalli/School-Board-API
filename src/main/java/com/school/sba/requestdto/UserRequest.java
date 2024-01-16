@@ -30,10 +30,10 @@ public class UserRequest {
 	private String password;
 	private String firstName;
 	private String lastName;
-    @Pattern(regexp = "^[0-9]+$", message = "Contact number must contain only digits")
 	private long contactNo;
 	@NotBlank(message = "email can not be blank")
 	@Email(regexp = "[a-zA-Z0-9+_.-]+@[a-zA-Z0-9.-]+\\.[a-z]{2,}", message = "invalid email ")
 	private String email;
 	private UserRole role;
+	
 }
