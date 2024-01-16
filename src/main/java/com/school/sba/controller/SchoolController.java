@@ -1,0 +1,44 @@
+package com.school.sba.controller;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.school.sba.entity.School;
+import com.school.sba.service.SchoolService;
+import com.school.sba.utility.ResponseStructure;
+
+@RestController
+public class SchoolController {
+	
+	@Autowired
+	private SchoolService schoolService;
+	
+	@PostMapping("/save-school")
+	public ResponseEntity<ResponseStructure<School>> saveCarts(@RequestBody School school){
+		return schoolService.saveSchool(school);
+	}
+	
+	@PutMapping("/update/{schoolId}")
+	public ResponseEntity<ResponseStructure<School>> updateCart(@PathVariable int schoolId, @RequestBody School updatedSchool){
+		return schoolService.updateSchool(schoolId,updatedSchool);
+	}
+	
+	@GetMapping("/get/{schoolId}")
+	public ResponseEntity<ResponseStructure<School>> getSchoolById(@PathVariable int schoolId){
+//		logger.info("getShoppingCartById() method invoked");  // for one Method
+		return schoolService.getSchoolById(schoolId);
+	}
+		
+	@PostMapping("/delete/{schoolId}")
+	public ResponseEntity<ResponseStructure<School>> deleteSchool(@PathVariable int schoolId){
+		return schoolService.deleteSchool(schoolId);
+	}
+	
+	
+}
