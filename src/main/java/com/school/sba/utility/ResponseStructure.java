@@ -15,7 +15,7 @@ import lombok.Setter;
 public class ResponseStructure<T> {
 
 	private int status;
-	private String messege;
+	private String message;
 	private T data;
 	
 	

@@ -27,11 +27,11 @@ public class UserController {
 	public ResponseEntity<ResponseStructure<UserResponse>> saveUser(@RequestBody  @Valid UserRequest userRequest) {
 		return userService.saveUser(userRequest);
 	}
-	@GetMapping("/users/register{userId}")
+	@GetMapping("/users/{userId}")
 	public ResponseEntity<ResponseStructure<UserResponse>> fetchUserById(@PathVariable int userId){
 		return userService.fetchUserById(userId);
 	}
-	@DeleteMapping("/users/register{userId}")
+	@DeleteMapping("/users/{userId}")
 	public ResponseEntity<ResponseStructure<UserResponse>> deleteUserById(@PathVariable int userId){
 		return userService.deleteUserById(userId);
 	}

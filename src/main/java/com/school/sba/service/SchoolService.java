@@ -27,7 +27,7 @@ public class SchoolService {
 		School save = schoolRepository.save(school);
 		
 		responseStructure.setStatus(HttpStatus.CREATED.value());
-		responseStructure.setMessege("School Saved...!");
+		responseStructure.setMessage("School Saved...!");
 		responseStructure.setData(save);
 		return new ResponseEntity<ResponseStructure<School>>(responseStructure,HttpStatus.CREATED);
 	}
@@ -40,7 +40,7 @@ public class SchoolService {
 		oldSchool=mapToCart(updatedSchool,oldSchool);
 			schoolRepository.save(oldSchool);
 			responseStructure.setStatus(HttpStatus.OK.value());
-			responseStructure.setMessege("Updated Successfully...!");
+			responseStructure.setMessage(null);
 			responseStructure.setData(oldSchool);
 	
 		}
@@ -64,7 +64,7 @@ public class SchoolService {
 		Optional<School> optional = schoolRepository.findById(schoolId);
 		if(optional.isPresent()) {
 			responseStructure.setStatus(HttpStatus.FOUND.value());
-			responseStructure.setMessege("found");
+			responseStructure.setMessage(null);
 			responseStructure.setData(optional.get());
 			return new ResponseEntity<ResponseStructure<School>>(responseStructure,HttpStatus.FOUND);
 		}else {
@@ -81,7 +81,7 @@ public class SchoolService {
 			schoolRepository.delete(id);
 			
 			responseStructure.setStatus(HttpStatus.OK.value());
-			responseStructure.setMessege("Deleted Successfully...!");
+			responseStructure.setMessage(null);
 			responseStructure.setData(id);
 	
 		}

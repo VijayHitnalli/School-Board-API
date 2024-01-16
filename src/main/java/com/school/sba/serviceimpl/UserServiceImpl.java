@@ -43,14 +43,14 @@ public class UserServiceImpl implements UserService {
 
 			if (userRepository.existsByRole(UserRole.ADMIN)) {
 				responseStructure.setStatus(HttpStatus.BAD_REQUEST.value());
-				responseStructure.setMessege("There should be only one ADMIN to the application");
+				responseStructure.setMessage(null);
 				return new ResponseEntity<ResponseStructure<UserResponse>>(responseStructure, HttpStatus.BAD_REQUEST);
 			}
 		}
 		user = userRepository.save(user);
 		UserResponse response = mapToUserResponse(user);
 		responseStructure.setStatus(HttpStatus.CREATED.value());
-		responseStructure.setMessege("User data Saved Successfully...!");
+		responseStructure.setMessage("User data Saved Successfully...!");
 		responseStructure.setData(response);
 		return new ResponseEntity<ResponseStructure<UserResponse>>(responseStructure, HttpStatus.CREATED);
 	}
@@ -65,7 +65,7 @@ public class UserServiceImpl implements UserService {
 		UserResponse mapToUSerResponse = mapToUserResponse(user);
 
 		responseStructure.setStatus(HttpStatus.OK.value());
-		responseStructure.setMessege("Data Deleted Successfully...!");
+		responseStructure.setMessage("Data Deleted Successfully...!");
 		responseStructure.setData(mapToUSerResponse);
 		return new ResponseEntity<ResponseStructure<UserResponse>>(responseStructure, HttpStatus.OK);
 
@@ -73,14 +73,16 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public ResponseEntity<ResponseStructure<UserResponse>> fetchUserById(int userId) {
-		User user = userRepository.findById(userId).orElseThrow(
-				() -> new UserNotFoundByIdException("Given userId->" + userId + " Not Found"));
-		userRepository.findById(userId);
-		UserResponse mapToUSerResponse = mapToUserResponse(user);
-		responseStructure.setStatus(HttpStatus.FOUND.value());
-		responseStructure.setMessege("Data fetch Successfully...!");
-		responseStructure.setData(mapToUSerResponse);
-		return new ResponseEntity<ResponseStructure<UserResponse>>(responseStructure, HttpStatus.FOUND);
+	    User user = userRepository.findById(userId).orElseThrow(
+	            () -> new UserNotFoundByIdException("Given userId->" + userId + " Not Found"));
+
+	    UserResponse response = mapToUserResponse(user);
+
+	    responseStructure.setStatus(HttpStatus.FOUND.value());
+	    responseStructure.setMessage("Data fetch Successfully...!");
+	    responseStructure.setData(response);
+
+	    return new ResponseEntity<ResponseStructure<UserResponse>>(responseStructure, HttpStatus.FOUND);
 	}
 
 }
