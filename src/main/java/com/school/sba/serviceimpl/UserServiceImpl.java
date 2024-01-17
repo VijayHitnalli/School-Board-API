@@ -88,9 +88,7 @@ public class UserServiceImpl implements UserService {
 		responseStructure.setMessage("Data Deleted Successfully...!");
 		responseStructure.setData(response);
 		return new ResponseEntity<ResponseStructure<UserResponse>>(responseStructure, HttpStatus.OK);
-
 	}
 
 	
-
 }

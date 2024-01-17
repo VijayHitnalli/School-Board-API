@@ -10,6 +10,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.school.sba.entity.School;
+import com.school.sba.requestdto.SchoolRequest;
+import com.school.sba.responsedto.SchoolResponse;
 import com.school.sba.service.SchoolService;
 import com.school.sba.utility.ResponseStructure;
 
@@ -19,26 +21,55 @@ public class SchoolController {
 	@Autowired
 	private SchoolService schoolService;
 	
-	@PostMapping("/save-school")
-	public ResponseEntity<ResponseStructure<School>> saveCarts(@RequestBody School school){
-		return schoolService.saveSchool(school);
+	@PostMapping("/users/{userId}/schools")
+	public ResponseEntity<ResponseStructure<SchoolResponse>> registerSchool(@PathVariable int userId,  @RequestBody SchoolRequest schoolRequest){
+		return schoolService.registerSchool(schoolRequest,userId);
 	}
 	
-	@PutMapping("/update/{schoolId}")
-	public ResponseEntity<ResponseStructure<School>> updateCart(@PathVariable int schoolId, @RequestBody School updatedSchool){
-		return schoolService.updateSchool(schoolId,updatedSchool);
-	}
 	
-	@GetMapping("/get/{schoolId}")
-	public ResponseEntity<ResponseStructure<School>> getSchoolById(@PathVariable int schoolId){
-//		logger.info("getShoppingCartById() method invoked");  // for one Method
-		return schoolService.getSchoolById(schoolId);
-	}
-		
-	@PostMapping("/delete/{schoolId}")
-	public ResponseEntity<ResponseStructure<School>> deleteSchool(@PathVariable int schoolId){
-		return schoolService.deleteSchool(schoolId);
-	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+//	@PutMapping("/update/{schoolId}")
+//	public ResponseEntity<ResponseStructure<School>> updateSchool(@PathVariable int schoolId, @RequestBody School updatedSchool){
+//		return schoolService.updateSchool(schoolId,updatedSchool);
+//	}
+//	
+//	@GetMapping("/get/{schoolId}")
+//	public ResponseEntity<ResponseStructure<School>> getSchoolById(@PathVariable int schoolId){
+////		logger.info("getShoppingCartById() method invoked");  // for one Method
+//		return schoolService.getSchoolById(schoolId);
+//	}
+//		
+//	@PostMapping("/delete/{schoolId}")
+//	public ResponseEntity<ResponseStructure<School>> deleteSchool(@PathVariable int schoolId){
+//		return schoolService.deleteSchool(schoolId);
+//	}
 	
 	
 }
