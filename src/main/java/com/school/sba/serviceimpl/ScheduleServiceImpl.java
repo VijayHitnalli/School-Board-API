@@ -1,6 +1,8 @@
 package com.school.sba.serviceimpl;
 
 import java.time.Duration;
+import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -8,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import com.school.sba.entity.Schedule;
+import com.school.sba.entity.School;
 import com.school.sba.exception.SchoolNotFoundByIdException;
 import com.school.sba.repository.ScheduleRepository;
 import com.school.sba.repository.SchoolRepository;
@@ -80,6 +83,25 @@ public class ScheduleServiceImpl implements ScheduleService{
 			}).orElseThrow(()->new SchoolNotFoundByIdException("School Id not present in the database"));
 			
 		
+	}
+
+	@Override
+	public ResponseEntity<ResponseStructure<ScheduleResponse>> getSchedule(int schoolId) {
+	    return schoolRepository.findById(schoolId).map(school -> {
+	        Optional<Schedule> optional2 = scheduleRepository.findById(schoolId);
+	        if (optional2.isPresent()) {
+	            Schedule schedule = optional2.get();
+	            ScheduleResponse response = mapToScheduleResponse(schedule);
+	            responseStructure.setStatus(HttpStatus.FOUND.value());
+	            responseStructure.setMessage("found the School Schedule");
+	            responseStructure.setData(response);
+	            return new ResponseEntity<ResponseStructure<ScheduleResponse>>(responseStructure, HttpStatus.FOUND);
+	        } else {
+	            responseStructure.setStatus(HttpStatus.BAD_REQUEST.value());
+	            responseStructure.setMessage("for given schoolId there is no schedule registered in the database");
+	            return new ResponseEntity<ResponseStructure<ScheduleResponse>>(responseStructure,HttpStatus.BAD_REQUEST);
+	        }
+	    }).orElseThrow(()-> new SchoolNotFoundByIdException("Given schoolId not in the database"));
 	}
 	
 

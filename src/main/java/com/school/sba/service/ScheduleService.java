@@ -10,6 +10,8 @@ public interface ScheduleService {
 
 
 	public ResponseEntity<ResponseStructure<ScheduleResponse>> createSchedule(ScheduleRequest scheduleRequest,int schoolId);
+
+	public ResponseEntity<ResponseStructure<ScheduleResponse>> getSchedule(int schoolId);
 			
 
 }
