@@ -18,9 +18,9 @@ public class ScheduleRequest {
 	private LocalTime opensAt;
 	private LocalTime closeAt;
 	private int classHoursPerDay;
-	private Duration classHourLength;
+	private int classHourLengthInMinutes;
 	private LocalTime breakTime;
-	private Duration breakLength;
-	private LocalTime lunchTime;
-	private Duration lunchLength;
+	private int breakLengthInMinutes ;
+	private LocalTime lunchTime ;
+	private int lunchLengthInMinutes;
 }

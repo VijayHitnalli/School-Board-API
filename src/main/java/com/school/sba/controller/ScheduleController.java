@@ -2,11 +2,16 @@ package com.school.sba.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.school.sba.requestdto.ScheduleRequest;
 import com.school.sba.responsedto.ScheduleResponse;
 import com.school.sba.service.ScheduleService;
 import com.school.sba.utility.ResponseStructure;
+
+import io.swagger.v3.oas.annotations.parameters.RequestBody;
 
 @RestController
 public class ScheduleController {
@@ -14,5 +19,10 @@ public class ScheduleController {
 		@Autowired
 		private ScheduleService scheduleService;
 		
+		
+		@PostMapping("/schools/{schoolId}/schedules")
+		public ResponseEntity<ResponseStructure<ScheduleResponse>> createSchedule(@PathVariable int schoolId, @RequestBody ScheduleRequest scheduleRequest){
+			return scheduleService.createSchedule(scheduleRequest,schoolId);
+		}
 		
 }

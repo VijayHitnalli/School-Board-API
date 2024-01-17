@@ -29,12 +29,13 @@ public class Schedule {
 	private LocalTime opensAt;
 	private LocalTime closeAt;
 	private int classHoursPerDay;
-	private Duration classHourLength;
+	private Duration classHourLengthInMinutes;
 	private LocalTime breakTime;
-	private Duration breakLength;
+	private Duration breakLengthInMinutes;
 	private LocalTime lunchTime;
-	private Duration lunchLength;
+	private Duration lunchLengthInMinutes;
 	@OneToOne
 	private School school;
+	
 	
 }

@@ -48,28 +48,56 @@ public class SchoolServiceImpl implements SchoolService{
 	}
 	
 
+//	@Override
+//	public ResponseEntity<ResponseStructure<SchoolResponse>> registerSchool(SchoolRequest schoolRequest, int userId) {
+//		User user = userRepository.findById(userId).orElseThrow(()->new UserNotFoundByIdException("User with given Id not found"));
+//		
+//		if(user.getRole().equals(UserRole.ADMIN)) {
+//			if(user.getSchool()==null) {
+//				School school = mapToSchoolRequest(schoolRequest);
+//				school= schoolRepository.save(school);
+//				SchoolResponse response = mapToSchoolResponse(school);
+//				user.setSchool(school);
+//				userRepository.save(user);
+//				responseStructure.setStatus(HttpStatus.CREATED.value());
+//				responseStructure.setMessage("School Created By ADMIN...!");
+//				responseStructure.setData(response);
+//				return new ResponseEntity<ResponseStructure<SchoolResponse>>(responseStructure,HttpStatus.CREATED);
+//			}else {
+//				throw new RuntimeException("School already created By ADMIN");
+//			}
+//			
+//		}else {
+//			responseStructure.setStatus(HttpStatus.BAD_REQUEST.value());
+//			responseStructure.setMessage("Only User with Role Admin can create the school");
+//			return new ResponseEntity<ResponseStructure<SchoolResponse>>(responseStructure,HttpStatus.BAD_REQUEST);
+//
+//		}
+//	}
+	
 	@Override
 	public ResponseEntity<ResponseStructure<SchoolResponse>> registerSchool(SchoolRequest schoolRequest, int userId) {
-		User user = userRepository.findById(userId).orElseThrow(()->new UserNotFoundByIdException("User with given Id not found"));
 		
-		if(user.getRole()==(UserRole.ADMIN)) {
-			School school = mapToSchoolRequest(schoolRequest);
-			schoolRepository.save(school);
-			SchoolResponse response = mapToSchoolResponse(school);
-			
-			responseStructure.setStatus(HttpStatus.CREATED.value());
-			responseStructure.setMessage("School Created By ADMIN...!");
-			responseStructure.setData(response);
-			return new ResponseEntity<ResponseStructure<SchoolResponse>>(responseStructure,HttpStatus.CREATED);
-		}else {
-			responseStructure.setStatus(HttpStatus.BAD_REQUEST.value());
-			responseStructure.setMessage("Only User with Role Admin can create the school");
-			return new ResponseEntity<ResponseStructure<SchoolResponse>>(responseStructure,HttpStatus.BAD_REQUEST);
-
-		}
+		   return userRepository.findById(userId).map(u->{
+			if(u.getRole().equals(UserRole.ADMIN)) {
+				if(u.getSchool()==null) {
+					School school = mapToSchoolRequest(schoolRequest);
+					school= schoolRepository.save(school);
+					SchoolResponse response = mapToSchoolResponse(school);
+					u.setSchool(school);
+					userRepository.save(u);
+					responseStructure.setStatus(HttpStatus.CREATED.value());
+					responseStructure.setMessage("School Created By ADMIN...!");
+					responseStructure.setData(response);
+					return new ResponseEntity<ResponseStructure<SchoolResponse>>(responseStructure,HttpStatus.CREATED);
+				}else {
+					throw new IllegalArgumentException("School already created By ADMIN");
+				}
+			}else {
+				responseStructure.setStatus(HttpStatus.BAD_REQUEST.value());
+				responseStructure.setMessage("Only ADMIN can create School...!");
+				return new ResponseEntity<ResponseStructure<SchoolResponse>>(responseStructure,HttpStatus.BAD_REQUEST);
+			}
+		}).orElseThrow(()-> new UserNotFoundByIdException("Given UserId not found in the database"));
 	}
-
-	
-	
-
 }

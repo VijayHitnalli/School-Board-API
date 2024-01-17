@@ -35,7 +35,7 @@ public class User {
 		private String email;
 		private String password;
 		private UserRole role;
-		private Boolean isDeleted;
+		private Boolean isDeleted=false;
 		@ManyToOne
 		private School school;
 }
