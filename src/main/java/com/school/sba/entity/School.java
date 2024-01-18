@@ -38,4 +38,6 @@ public class School {
 		private List<User> users;
 		@OneToOne
 		private Schedule schedule;
+		@OneToMany(mappedBy = "school")
+		private List<AcademicProgram> academicPrograms;
 }

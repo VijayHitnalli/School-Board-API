@@ -5,6 +5,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.school.sba.requestdto.ScheduleRequest;
@@ -28,5 +29,8 @@ public class ScheduleController {
 		public ResponseEntity<ResponseStructure<ScheduleResponse>> getSchedule(@PathVariable int schoolId){
 			return scheduleService.getSchedule(schoolId);
 		}
-		
+		@PutMapping("/schedules/{scheduleId}")
+		public ResponseEntity<ResponseStructure<ScheduleResponse>> updateSchedule(@PathVariable int scheduleId,@RequestBody ScheduleRequest scheduleRequest){
+			return scheduleService.updateSchedule(scheduleId,scheduleRequest);
+		}
 }

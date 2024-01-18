@@ -9,6 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+
 import com.school.sba.entity.Schedule;
 import com.school.sba.entity.School;
 import com.school.sba.exception.SchoolNotFoundByIdException;
@@ -48,6 +49,7 @@ public class ScheduleServiceImpl implements ScheduleService{
 	            .build();
 	}
 
+
 	private ScheduleResponse mapToScheduleResponse(Schedule schedule) {
 	    return ScheduleResponse.builder()
 	            .scheduleId(schedule.getScheduleId())
@@ -82,7 +84,6 @@ public class ScheduleServiceImpl implements ScheduleService{
 				}
 			}).orElseThrow(()->new SchoolNotFoundByIdException("School Id not present in the database"));
 			
-		
 	}
 
 	@Override
@@ -103,6 +104,25 @@ public class ScheduleServiceImpl implements ScheduleService{
 	        }
 	    }).orElseThrow(()-> new SchoolNotFoundByIdException("Given schoolId not in the database"));
 	}
-	
+
+	@Override
+	public ResponseEntity<ResponseStructure<ScheduleResponse>> updateSchedule(int scheduleId, ScheduleRequest scheduleRequest) {
+	    return scheduleRepository.findById(scheduleId).map(e -> {
+	        e.setOpensAt(scheduleRequest.getOpensAt());
+	        e.setCloseAt(scheduleRequest.getCloseAt());
+	        e.setClassHoursPerDay(scheduleRequest.getClassHoursPerDay());
+	        e.setClassHourLengthInMinutes(Duration.ofMinutes(scheduleRequest.getClassHourLengthInMinutes()));
+	        e.setBreakTime(scheduleRequest.getBreakTime());
+	        e.setBreakLengthInMinutes(Duration.ofMinutes(scheduleRequest.getBreakLengthInMinutes()));
+	        e.setLunchTime(scheduleRequest.getLunchTime());
+	        e.setLunchLengthInMinutes(Duration.ofMinutes(scheduleRequest.getLunchLengthInMinutes()));
+	        scheduleRepository.save(e);
+	        ScheduleResponse response = mapToScheduleResponse(e);
+	        responseStructure.setStatus(HttpStatus.OK.value());
+	        responseStructure.setMessage("Schedule updated successfully");
+	        responseStructure.setData(response);
+	        return new ResponseEntity<>(responseStructure, HttpStatus.OK);
+	    }).orElseThrow(() -> new RuntimeException("Schedule not found with ID: " + scheduleId));
+	}
 
 }
