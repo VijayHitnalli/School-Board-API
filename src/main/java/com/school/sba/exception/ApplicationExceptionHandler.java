@@ -52,6 +52,10 @@ public class ApplicationExceptionHandler extends ResponseEntityExceptionHandler{
 		public ResponseEntity<Object> handleRuntime(RuntimeException exception){
 			return structure(HttpStatus.BAD_REQUEST, exception.getMessage(), "Illegal Argument");
 		}
+		@ExceptionHandler(DataNotFoundException.class)
+		public ResponseEntity<Object> handleRuntime(DataNotFoundException exception){
+			return structure(HttpStatus.BAD_REQUEST, exception.getMessage(), "Illegal Argument");
+		}
 		
 		
 		
