@@ -23,8 +23,9 @@ public class Subject {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int subjectId;
-	private List<String> subjects;
+	private String subjectName;
 	@ManyToMany(mappedBy = "subjects")
 	private List<AcademicProgram> academicPrograms;
+	
 	
 }

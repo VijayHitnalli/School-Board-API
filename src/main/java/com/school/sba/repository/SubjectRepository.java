@@ -8,5 +8,5 @@ import com.school.sba.entity.AcademicProgram;
 import com.school.sba.entity.Subject;
 
 public interface SubjectRepository extends JpaRepository<Subject, Integer>{
-	Optional<AcademicProgram> findBySubjectName(String name);
+	Optional<Subject> findBySubjectName(String subjectName);
 }

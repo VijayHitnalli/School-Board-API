@@ -13,5 +13,5 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 public class SubjectRequest {
-	private List<String> subjects;
+	private List<String> subjectsNames;
 }

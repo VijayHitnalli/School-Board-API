@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import com.school.sba.entity.AcademicProgram;
+import com.school.sba.entity.Subject;
 import com.school.sba.exception.DataNotFoundException;
 import com.school.sba.exception.SchoolNotFoundByIdException;
 import com.school.sba.repository.AcademicProgramRepository;
@@ -37,12 +38,24 @@ public class AcademicProgramServiceImpl implements AcademicProgramService {
 				.programType(academicProgramRequest.getProgramType()).build();
 	}
 
-	private AcademicProgramResponse mapToAcademicProgramResponse(AcademicProgram academicProgram) {
-		return AcademicProgramResponse.builder().programId(academicProgram.getProgramId())
-				.programName(academicProgram.getProgramName()).programType(academicProgram.getProgramType())
-				.beginsAt(academicProgram.getBeginsAt()).endsAt(academicProgram.getEndsAt()).build();
-	}
-
+	public AcademicProgramResponse mapToAcademicProgramResponse(AcademicProgram academicProgram) {
+		List<String> subjectNames = new ArrayList<String>();
+		if(academicProgram.getSubjects()!=null)
+		{
+			academicProgram.getSubjects().forEach(subject->{
+				subjectNames.add(subject.getSubjectName());
+			});
+		}
+		return AcademicProgramResponse.builder()
+				.programId(academicProgram.getProgramId())
+				.programType(academicProgram.getProgramType())
+				.programName(academicProgram.getProgramName())
+				.beginsAt(academicProgram.getBeginsAt())
+				.endsAt(academicProgram.getEndsAt())
+				.subjects(subjectNames)
+				.build();
+	    }
+	
 	@Override
 	public ResponseEntity<ResponseStructure<AcademicProgramResponse>> addAcademicProgram(int schoolId,
 			AcademicProgramRequest academicProgramRequest) {
