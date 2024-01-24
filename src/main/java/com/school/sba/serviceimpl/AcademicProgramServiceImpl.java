@@ -15,6 +15,7 @@ import com.school.sba.exception.DataNotFoundException;
 import com.school.sba.exception.SchoolNotFoundByIdException;
 import com.school.sba.repository.AcademicProgramRepository;
 import com.school.sba.repository.SchoolRepository;
+import com.school.sba.repository.UserRepository;
 import com.school.sba.requestdto.AcademicProgramRequest;
 import com.school.sba.responsedto.AcademicProgramResponse;
 import com.school.sba.service.AcademicProgramService;
@@ -28,6 +29,9 @@ public class AcademicProgramServiceImpl implements AcademicProgramService {
 
 	@Autowired
 	private AcademicProgramRepository academicProgramRepository;
+	
+	@Autowired
+	private UserRepository userRepository;
 
 	@Autowired
 	private ResponseStructure<AcademicProgramResponse> responseStructure;
@@ -40,29 +44,26 @@ public class AcademicProgramServiceImpl implements AcademicProgramService {
 
 	public AcademicProgramResponse mapToAcademicProgramResponse(AcademicProgram academicProgram) {
 		List<String> subjectNames = new ArrayList<String>();
-		if(academicProgram.getSubjects()!=null)
-		{
-			academicProgram.getSubjects().forEach(subject->{
+		if (academicProgram.getSubjects() != null) {
+			academicProgram.getSubjects().forEach(subject -> {
 				subjectNames.add(subject.getSubjectName());
 			});
 		}
-		return AcademicProgramResponse.builder()
-				.programId(academicProgram.getProgramId())
-				.programType(academicProgram.getProgramType())
-				.programName(academicProgram.getProgramName())
-				.beginsAt(academicProgram.getBeginsAt())
-				.endsAt(academicProgram.getEndsAt())
-				.subjects(subjectNames)
+		return AcademicProgramResponse.builder().programId(academicProgram.getProgramId())
+				.programType(academicProgram.getProgramType()).programName(academicProgram.getProgramName())
+				.beginsAt(academicProgram.getBeginsAt()).endsAt(academicProgram.getEndsAt()).subjects(subjectNames)
 				.build();
-	    }
-	
+	}
+
 	@Override
 	public ResponseEntity<ResponseStructure<AcademicProgramResponse>> addAcademicProgram(int schoolId,
 			AcademicProgramRequest academicProgramRequest) {
-		return schoolRepository.findById(schoolId).map(a -> {
+		return schoolRepository.findById(schoolId).map(school -> {
 			AcademicProgram academicProgram = mapToAcademicProgramRequest(academicProgramRequest);
+			academicProgram.setSchool(school);
 			academicProgram = academicProgramRepository.save(academicProgram);
-			a.getAcademicPrograms().add(academicProgram);
+			school.getAcademicPrograms().add(academicProgram);
+			schoolRepository.save(school);
 			AcademicProgramResponse response = mapToAcademicProgramResponse(academicProgram);
 			responseStructure.setStatus(HttpStatus.CREATED.value());
 			responseStructure.setMessage("Academic-Program Created Successfully...");
@@ -96,5 +97,7 @@ public class AcademicProgramServiceImpl implements AcademicProgramService {
 
 		}).orElseThrow(() -> new SchoolNotFoundByIdException("School Not Present for given school id"));
 	}
+
+	
 
 }

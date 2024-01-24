@@ -56,22 +56,22 @@ public class ScheduleServiceImpl implements ScheduleService{
 	            .opensAt(schedule.getOpensAt())
 	            .closeAt(schedule.getCloseAt())
 	            .classHoursPerDay(schedule.getClassHoursPerDay())
-	            .classHourLengthInMinutes(schedule.getClassHourLengthInMinutes().toMinutesPart())
+	            .classHourLengthInMinutes((int)schedule.getClassHourLengthInMinutes().toMinutes())
 	            .breakTime(schedule.getBreakTime())
-	            .breakLengthInMinutes(schedule.getBreakLengthInMinutes().toMinutesPart())
+	            .breakLengthInMinutes((int)schedule.getBreakLengthInMinutes().toMinutes())
 	            .lunchTime(schedule.getLunchTime())
-	            .lunchLengthInMinutes(schedule.getLunchLengthInMinutes().toMinutesPart())
+	            .lunchLengthInMinutes((int)schedule.getLunchLengthInMinutes().toMinutes())
 	            .build();
 	}
 
 	@Override
 	public ResponseEntity<ResponseStructure<ScheduleResponse>> createSchedule(ScheduleRequest scheduleRequest,int schoolId) {
-		return	schoolRepository.findById(schoolId).map(s->{
-			if(s.getSchedule()==null) {
+		return	schoolRepository.findById(schoolId).map(school->{
+			if(school.getSchedule()==null) {
 				Schedule schedule = mapToScheduleRequest(scheduleRequest);
 				schedule=scheduleRepository.save(schedule);
-				s.setSchedule(schedule);
-				schoolRepository.save(s);
+				school.setSchedule(schedule);
+				schoolRepository.save(school);
 				ScheduleResponse response = mapToScheduleResponse(schedule);
 				responseStructure.setStatus(HttpStatus.CREATED.value());
 				responseStructure.setMessage("Schedule created to School");
@@ -107,22 +107,21 @@ public class ScheduleServiceImpl implements ScheduleService{
 
 	@Override
 	public ResponseEntity<ResponseStructure<ScheduleResponse>> updateSchedule(int scheduleId, ScheduleRequest scheduleRequest) {
-	    return scheduleRepository.findById(scheduleId).map(e -> {
-	        e.setOpensAt(scheduleRequest.getOpensAt());
-	        e.setCloseAt(scheduleRequest.getCloseAt());
-	        e.setClassHoursPerDay(scheduleRequest.getClassHoursPerDay());
-	        e.setClassHourLengthInMinutes(Duration.ofMinutes(scheduleRequest.getClassHourLengthInMinutes()));
-	        e.setBreakTime(scheduleRequest.getBreakTime());
-	        e.setBreakLengthInMinutes(Duration.ofMinutes(scheduleRequest.getBreakLengthInMinutes()));
-	        e.setLunchTime(scheduleRequest.getLunchTime());
-	        e.setLunchLengthInMinutes(Duration.ofMinutes(scheduleRequest.getLunchLengthInMinutes()));
-	        scheduleRepository.save(e);
-	        ScheduleResponse response = mapToScheduleResponse(e);
+	    return scheduleRepository.findById(scheduleId).map(schedule -> {
+	        schedule.setOpensAt(scheduleRequest.getOpensAt());
+	        schedule.setCloseAt(scheduleRequest.getCloseAt());
+	        schedule.setClassHoursPerDay(scheduleRequest.getClassHoursPerDay());
+	        schedule.setClassHourLengthInMinutes(Duration.ofMinutes(scheduleRequest.getClassHourLengthInMinutes()));
+	        schedule.setBreakTime(scheduleRequest.getBreakTime());
+	        schedule.setBreakLengthInMinutes(Duration.ofMinutes(scheduleRequest.getBreakLengthInMinutes()));
+	        schedule.setLunchTime(scheduleRequest.getLunchTime());
+	        schedule.setLunchLengthInMinutes(Duration.ofMinutes(scheduleRequest.getLunchLengthInMinutes()));
+	        scheduleRepository.save(schedule);
+	        ScheduleResponse response = mapToScheduleResponse(schedule);
 	        responseStructure.setStatus(HttpStatus.OK.value());
 	        responseStructure.setMessage("Schedule updated successfully");
 	        responseStructure.setData(response);
 	        return new ResponseEntity<>(responseStructure, HttpStatus.OK);
 	    }).orElseThrow(() -> new RuntimeException("Schedule not found with ID: " + scheduleId));
 	}
-
 }

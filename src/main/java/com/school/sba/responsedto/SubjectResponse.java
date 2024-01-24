@@ -15,6 +15,7 @@ import lombok.Setter;
 @NoArgsConstructor
 public class SubjectResponse {
 	private int subjectId;
+	private String subjectName;
 	private List<String> subjects;
 
 }

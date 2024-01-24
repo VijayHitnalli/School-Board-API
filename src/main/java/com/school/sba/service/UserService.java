@@ -14,4 +14,6 @@ public interface UserService {
 
 	public ResponseEntity<ResponseStructure<UserResponse>> deleteUserById(int userId);
 
+	public ResponseEntity<ResponseStructure<UserResponse>> addUserToAcademicProgram(int userId, int programId);
+
 }

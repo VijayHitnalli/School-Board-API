@@ -34,8 +34,7 @@ public class Schedule {
 	private Duration breakLengthInMinutes;
 	private LocalTime lunchTime;
 	private Duration lunchLengthInMinutes;
-	@OneToOne
-	private School school;
+	
 	
 	
 }

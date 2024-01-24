@@ -60,7 +60,18 @@ public class ApplicationExceptionHandler extends ResponseEntityExceptionHandler{
 		public ResponseEntity<Object> handleAcademicProgramNotFoundById(AcademicProgramNotFoundByIdException exception){
 			return structure(HttpStatus.NOT_FOUND, exception.getMessage(), "Program not found with given Id");
 		}
-		
+		@ExceptionHandler(InvalidUserRoleException.class)
+		public ResponseEntity<Object> handleInvalidUserRole(InvalidUserRoleException exception){
+			return structure(HttpStatus.NOT_FOUND, exception.getMessage(), "Program not found with given Id");
+		}
+		@ExceptionHandler(AccessDeniedException.class)
+		public ResponseEntity<Object> handleAccessDenied(AccessDeniedException exception){
+			return structure(HttpStatus.NOT_ACCEPTABLE, exception.getMessage(), "give correct userId to add Academic-Program");
+		}
+		@ExceptionHandler(SubjectNotFoundByIdException.class)
+		public ResponseEntity<Object> handleSubjectNotFoundById(SubjectNotFoundByIdException exception){
+			return structure(HttpStatus.NOT_FOUND, exception.getMessage(), "subject not found");
+		}
 		
 		
 		
