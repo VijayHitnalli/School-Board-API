@@ -17,7 +17,7 @@ public interface SubjectService {
 
 	public ResponseEntity<ResponseStructure<SubjectResponse>> findAllSubjects();
 
-	public ResponseEntity<ResponseStructure<UserResponse>> addSubjectToUser(int subjectId, int userId);
+	public ResponseEntity<ResponseStructure<UserResponse>> addSubjectToUser(int subjectId);
 			
 
 }

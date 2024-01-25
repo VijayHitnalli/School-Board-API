@@ -10,6 +10,7 @@ import org.apache.coyote.BadRequestException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import com.school.sba.entity.AcademicProgram;
@@ -157,9 +158,10 @@ import com.school.sba.utility.ResponseStructure;
 		
 		
 		@Override
-		public ResponseEntity<ResponseStructure<UserResponse>> addSubjectToUser(int subjectId, int userId) {
-			return userRepository.findById(userId).map(user->{
-				if(user.getRole()!=UserRole.ADMIN&& user.getRole()!=UserRole.STUDENT) {
+		public ResponseEntity<ResponseStructure<UserResponse>> addSubjectToUser(int subjectId) {
+			String name = SecurityContextHolder.getContext().getAuthentication().getName();
+			return userRepository.findByUserName(name).map(user->{
+				if(user.getRole()!=UserRole.ADMIN && user.getRole()!=UserRole.STUDENT) {
 					Subject subject= subjectRepository.findById(subjectId).orElseThrow(()-> new SubjectNotFoundByIdException("given subjectId not found in the dcatabase"));
 					if(!subject.getUsers().contains(user)) {
 						subject.getUsers().add(user);

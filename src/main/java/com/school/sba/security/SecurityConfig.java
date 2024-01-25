@@ -3,6 +3,7 @@ package com.school.sba.security;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.Customizer;
@@ -27,7 +28,8 @@ public class SecurityConfig {
 	@Bean
 	SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
 		return httpSecurity.csrf(csrf->csrf.disable())
-				.authorizeHttpRequests(auth->auth.requestMatchers("/users/register").permitAll().anyRequest().authenticated())
+				.authorizeHttpRequests(auth->auth.requestMatchers("/**").permitAll()
+				.anyRequest().authenticated())
 				.formLogin(Customizer.withDefaults())
 				.build();
 	}
@@ -37,5 +39,5 @@ public class SecurityConfig {
 		provider.setUserDetailsService(customUserDetailService);
 		provider.setPasswordEncoder(passwordEncoder());
 		return provider;
-	}
+	}                                 
 }

@@ -10,6 +10,6 @@ import com.school.sba.utility.ResponseStructure;
 public interface SchoolService {
 
 
-	ResponseEntity<ResponseStructure<SchoolResponse>> registerSchool(SchoolRequest schoolRequest, int userId);
+	ResponseEntity<ResponseStructure<SchoolResponse>> registerSchool(SchoolRequest schoolRequest);
 
 }
