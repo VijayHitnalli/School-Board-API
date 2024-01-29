@@ -56,4 +56,10 @@ public class UserController {
 	public ResponseEntity<ResponseStructure<UserResponse>> addUserToAcademicProgram(@PathVariable int userId, @PathVariable int programId){
 		return userService.addUserToAcademicProgram(userId,programId);
 	}
+	@PreAuthorize("hasAuthority('ADMIN')")
+	@PutMapping("/subjects/{subjectId}/users/{userId}")
+	public ResponseEntity<ResponseStructure<UserResponse>> addSubjectToTeacher(@PathVariable int subjectId,@PathVariable int userId)
+	{
+		return userService.addSubjectToTeacher(subjectId,userId);
+	}
 }

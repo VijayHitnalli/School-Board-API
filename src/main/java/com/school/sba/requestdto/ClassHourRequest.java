@@ -1,18 +1,24 @@
 package com.school.sba.requestdto;
 
-import java.util.List;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-@Setter
+
 @Getter
+@Setter
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class SubjectRequest {
-	private List<String> subjectsNames;
+public class ClassHourRequest {
+
+	private LocalDateTime beginsAt;
+	private LocalDateTime endsAt;
+	private int roomNo;
+	private String classStatus;
 	
 }

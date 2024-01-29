@@ -1,18 +1,16 @@
-package com.school.sba.requestdto;
-
-import java.util.List;
+package com.school.sba.exception;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-@Setter
+
 @Getter
-@Builder
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class SubjectRequest {
-	private List<String> subjectsNames;
-	
+@Builder
+public class ScheduleNotFoundBySchoolIdException extends RuntimeException{
+private String message;
 }

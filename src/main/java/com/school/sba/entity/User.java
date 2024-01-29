@@ -39,10 +39,13 @@ public class User {
 		private String password;
 		private UserRole role;
 		private Boolean isDeleted=false;
+		
 		@ManyToOne
 		private School school;
+		
 		@ManyToMany(mappedBy = "users")
 		private List<AcademicProgram> academicPrograms;
+		
 		@ManyToOne
 		private Subject subject;
 }

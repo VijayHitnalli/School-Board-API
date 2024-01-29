@@ -37,72 +37,71 @@ public class ScheduleServiceImpl implements ScheduleService{
 	
 	
 	private Schedule mapToScheduleRequest(ScheduleRequest scheduleRequest) {
-	    return Schedule.builder()
-	            .opensAt(scheduleRequest.getOpensAt())
-	            .closeAt(scheduleRequest.getCloseAt())
-	            .classHoursPerDay(scheduleRequest.getClassHoursPerDay())
-	            .classHourLengthInMinutes(Duration.ofMinutes(scheduleRequest.getClassHourLengthInMinutes()))
-	            .breakTime(scheduleRequest.getBreakTime())
-	            .breakLengthInMinutes(Duration.ofMinutes(scheduleRequest.getBreakLengthInMinutes()))
-	            .lunchTime(scheduleRequest.getLunchTime())
-	            .lunchLengthInMinutes(Duration.ofMinutes(scheduleRequest.getLunchLengthInMinutes()))
-	            .build();
+		return Schedule.builder().opensAt(scheduleRequest.getOpensAt()).closeAt(scheduleRequest.getCloseAt())
+				.classHoursPerDay(scheduleRequest.getClassHoursPerDay())
+				.classHourLengthInMinutes(Duration.ofMinutes(scheduleRequest.getClassHourLengthInMinutes()))
+				.breakTime(scheduleRequest.getBreakTime())
+				.breakLengthInMinutes(Duration.ofMinutes(scheduleRequest.getBreakLengthInMinutes()))
+				.lunchTime(scheduleRequest.getLunchTime())
+				.lunchLengthInMinutes(Duration.ofMinutes(scheduleRequest.getLunchLengthInMinutes())).build();
 	}
 
-
 	private ScheduleResponse mapToScheduleResponse(Schedule schedule) {
-	    return ScheduleResponse.builder()
-	            .scheduleId(schedule.getScheduleId())
-	            .opensAt(schedule.getOpensAt())
-	            .closeAt(schedule.getCloseAt())
-	            .classHoursPerDay(schedule.getClassHoursPerDay())
-	            .classHourLengthInMinutes((int)schedule.getClassHourLengthInMinutes().toMinutes())
-	            .breakTime(schedule.getBreakTime())
-	            .breakLengthInMinutes((int)schedule.getBreakLengthInMinutes().toMinutes())
-	            .lunchTime(schedule.getLunchTime())
-	            .lunchLengthInMinutes((int)schedule.getLunchLengthInMinutes().toMinutes())
-	            .build();
+		return ScheduleResponse.builder().scheduleId(schedule.getScheduleId()).opensAt(schedule.getOpensAt())
+				.classHourLengthInMinutes((int) schedule.getClassHourLengthInMinutes().toMinutes())
+				.closeAt(schedule.getCloseAt()).classHoursPerDay(schedule.getClassHoursPerDay())
+				.breakTime(schedule.getBreakTime())
+				.breakLengthInMinutes((int) schedule.getBreakLengthInMinutes().toMinutes())
+				.lunchTime(schedule.getLunchTime())
+				.lunchLengthInMinutes((int) schedule.getLunchLengthInMinutes().toMinutes()).build();
 	}
 
 	@Override
-	public ResponseEntity<ResponseStructure<ScheduleResponse>> createSchedule(ScheduleRequest scheduleRequest,int schoolId) {
-		return	schoolRepository.findById(schoolId).map(school->{
-			if(school.getSchedule()==null) {
+	public ResponseEntity<ResponseStructure<ScheduleResponse>> createSchedule(ScheduleRequest scheduleRequest,int schoolId) 
+	{
+		return schoolRepository.findById(schoolId).map(school->{
+			
+			if(school.getSchedule()==null)
+			{
 				Schedule schedule = mapToScheduleRequest(scheduleRequest);
-				schedule=scheduleRepository.save(schedule);
+				schedule = scheduleRepository.save(schedule);
 				school.setSchedule(schedule);
 				schoolRepository.save(school);
-				ScheduleResponse response = mapToScheduleResponse(schedule);
+				
+				ScheduleResponse scheduleResponse = mapToScheduleResponse(schedule);
+				
 				responseStructure.setStatus(HttpStatus.CREATED.value());
-				responseStructure.setMessage("Schedule created to School");
-				responseStructure.setData(response);
-				return  new ResponseEntity<ResponseStructure<ScheduleResponse>>(responseStructure,HttpStatus.CREATED);
-			} else {
-				responseStructure.setStatus(HttpStatus.BAD_REQUEST.value());
-				responseStructure.setMessage("Schedule already created to School");
-				return  new ResponseEntity<ResponseStructure<ScheduleResponse>>(responseStructure,HttpStatus.BAD_REQUEST);
-				}
-			}).orElseThrow(()->new SchoolNotFoundByIdException("School Id not present in the database"));
+				responseStructure.setMessage("Schedule Created for School");
+				responseStructure.setData(scheduleResponse);
+				
+				return new ResponseEntity<ResponseStructure<ScheduleResponse>>(responseStructure,HttpStatus.CREATED);
+			}
+			else 
+				throw new IllegalArgumentException("Schedule of a school already exist");
 			
+		}).orElseThrow(()->new SchoolNotFoundByIdException("School Not Present for given school id"));
+		
 	}
+	
+	
 
 	@Override
 	public ResponseEntity<ResponseStructure<ScheduleResponse>> getSchedule(int schoolId) {
-	    return schoolRepository.findById(schoolId).map(school -> {
-	        Optional<Schedule> optional2 = scheduleRepository.findById(schoolId);
-	        if (optional2.isPresent()) {
-	            Schedule schedule = optional2.get();
-	            ScheduleResponse response = mapToScheduleResponse(schedule);
-	            responseStructure.setStatus(HttpStatus.FOUND.value());
-	            responseStructure.setMessage("found the School Schedule");
-	            responseStructure.setData(response);
-	            return new ResponseEntity<ResponseStructure<ScheduleResponse>>(responseStructure, HttpStatus.FOUND);
-	        } else {
-	            responseStructure.setStatus(HttpStatus.BAD_REQUEST.value());
-	            responseStructure.setMessage("for given schoolId there is no schedule registered in the database");
-	            return new ResponseEntity<ResponseStructure<ScheduleResponse>>(responseStructure,HttpStatus.BAD_REQUEST);
-	        }
-	    }).orElseThrow(()-> new SchoolNotFoundByIdException("Given schoolId not in the database"));
+	return schoolRepository.findById(schoolId).map(school->{
+			
+			if(school.getSchedule()!=null)
+			{
+				responseStructure.setStatus(HttpStatus.FOUND.value());
+				responseStructure.setMessage("Schedule data found for given school");
+				responseStructure.setData(mapToScheduleResponse(school.getSchedule()));
+				
+				return new ResponseEntity<ResponseStructure<ScheduleResponse>>(responseStructure,HttpStatus.FOUND);
+			}
+			else {
+				throw new IllegalArgumentException("Schedule not created for given school");
+			}
+			
+		}).orElseThrow(()-> new SchoolNotFoundByIdException("School not present for given school id"));	
 	}
 
 	@Override
@@ -124,4 +123,10 @@ public class ScheduleServiceImpl implements ScheduleService{
 	        return new ResponseEntity<>(responseStructure, HttpStatus.OK);
 	    }).orElseThrow(() -> new RuntimeException("Schedule not found with ID: " + scheduleId));
 	}
+
+
+	
+
+
+
 }

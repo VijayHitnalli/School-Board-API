@@ -1,5 +1,7 @@
 package com.school.sba.requestdto;
 
+import java.util.List;
+
 import com.school.sba.enums.UserRole;
 
 import jakarta.validation.constraints.Email;
@@ -34,6 +36,7 @@ public class UserRequest {
 	@NotBlank(message = "email can not be blank")
 	@Email(regexp = "[a-zA-Z0-9+_.-]+@[a-zA-Z0-9.-]+\\.[a-z]{2,}", message = "invalid email ")
 	private String email;
-	private UserRole role;
+	private String role;
+
 	
 }

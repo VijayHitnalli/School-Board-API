@@ -1,5 +1,7 @@
 package com.school.sba.controller;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -25,27 +27,22 @@ public class SubjectController {
 	@Autowired
 	private SubjectService subjectService;
 	
-	@Autowired
-	private ResponseStructure<AcademicProgramResponse> responseStructure;
-	
 	@PreAuthorize("hasAuthority('ADMIN')")
 	@PostMapping("/academic-programs/{programId}/subjects")
-	public ResponseEntity<ResponseStructure<AcademicProgramResponse>> addSubjects(@PathVariable int programId, @RequestBody SubjectRequest subjectRequest){
-		return subjectService.addSubjects(programId,subjectRequest);
+	public ResponseEntity<ResponseStructure<AcademicProgramResponse>> addSubjects(@PathVariable int programId,@RequestBody SubjectRequest subjectRequest)
+	{
+		return subjectService.insertAndUpdateSubjectsIntoAcademicProgram(programId,subjectRequest);
 	}
 	@PreAuthorize("hasAuthority('ADMIN')")
 	@PutMapping("/academic-programs/{programId}")
-	public ResponseEntity<ResponseStructure<AcademicProgramResponse>> updateSubjects(@PathVariable int programId,@RequestBody SubjectRequest subjectRequest){
-		return subjectService.addSubjects(programId, subjectRequest);
+	public ResponseEntity<ResponseStructure<AcademicProgramResponse>> updateSubjects(@PathVariable int programId,@RequestBody SubjectRequest subjectRequest)
+	{
+		return subjectService.insertAndUpdateSubjectsIntoAcademicProgram(programId,subjectRequest);
 	}
+
 	@GetMapping("/subjects")
-	public ResponseEntity<ResponseStructure<SubjectResponse>> findAllSubjects(){
+	public ResponseEntity<ResponseStructure<List<SubjectResponse>>> findAllSubjects()
+	{
 		return subjectService.findAllSubjects();
-	}
-	
-	@PutMapping("/subjects/{subjectId}/users")
-	@PreAuthorize("hasAuthority('ADMIN')")
-	public ResponseEntity<ResponseStructure<UserResponse>> addSubjectToUser(@PathVariable int subjectId){
-		return subjectService.addSubjectToUser(subjectId);
 	}
 }

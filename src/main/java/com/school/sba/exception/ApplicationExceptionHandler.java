@@ -62,7 +62,7 @@ public class ApplicationExceptionHandler extends ResponseEntityExceptionHandler{
 		}
 		@ExceptionHandler(InvalidUserRoleException.class)
 		public ResponseEntity<Object> handleInvalidUserRole(InvalidUserRoleException exception){
-			return structure(HttpStatus.NOT_FOUND, exception.getMessage(), "Program not found with given Id");
+			return structure(HttpStatus.NOT_FOUND, exception.getMessage(), "Invalid UserRole with given Id");
 		}
 		@ExceptionHandler(AccessDeniedException.class)
 		public ResponseEntity<Object> handleAccessDenied(AccessDeniedException exception){
@@ -71,6 +71,14 @@ public class ApplicationExceptionHandler extends ResponseEntityExceptionHandler{
 		@ExceptionHandler(SubjectNotFoundByIdException.class)
 		public ResponseEntity<Object> handleSubjectNotFoundById(SubjectNotFoundByIdException exception){
 			return structure(HttpStatus.NOT_FOUND, exception.getMessage(), "subject not found");
+		}
+		@ExceptionHandler(ScheduleNotFoundBySchoolIdException.class)
+		public ResponseEntity<Object> handleScheduleNotFoundBySchoolId(ScheduleNotFoundBySchoolIdException exception){
+			return structure(HttpStatus.NOT_FOUND, exception.getMessage(), "Schedule not found");
+		}
+		@ExceptionHandler(DuplicateClassHourException.class)
+		public ResponseEntity<Object> handleDuplicateClassHour(DuplicateClassHourException exception){
+			return structure(HttpStatus.NOT_FOUND, exception.getMessage(), "ClassHour not found");
 		}
 		
 		
