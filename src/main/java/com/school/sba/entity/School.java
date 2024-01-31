@@ -34,8 +34,10 @@ public class School {
 		private long contactNo;
 		private String emailId;
 		private String address;
+		private Boolean isDeleted;
 		@OneToOne
 		private Schedule schedule;
+		
 		@OneToMany(mappedBy = "school")
 		private List<AcademicProgram> academicPrograms;
 }

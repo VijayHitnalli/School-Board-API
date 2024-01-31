@@ -12,4 +12,6 @@ public interface SchoolService {
 
 	ResponseEntity<ResponseStructure<SchoolResponse>> registerSchool(SchoolRequest schoolRequest);
 
+	ResponseEntity<ResponseStructure<SchoolResponse>> deleteSchoolById(int schoolId);
+
 }

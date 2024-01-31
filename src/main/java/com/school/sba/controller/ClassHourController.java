@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.school.sba.exception.DuplicateClassHourException;
 import com.school.sba.repository.ClassHourRepository;
 import com.school.sba.requestdto.ClassHourRequest;
+import com.school.sba.requestdto.ClassHourUpdateDTO;
 import com.school.sba.responsedto.ClassHourResponse;
 import com.school.sba.service.ClassHourService;
 import com.school.sba.utility.ResponseStructure;
@@ -36,7 +37,7 @@ public class ClassHourController {
 			return classHourService.addClassHourToAcademicProgram(programId,classHourRequest);
 		}
 		@PutMapping(" /class-hours")
-		public ResponseEntity<ResponseStructure<ClassHourResponse>> updateClassHours(List<ClassHourRequest> classHourRequests){
+		public ResponseEntity<ResponseStructure<List<ClassHourResponse>>> updateClassHours(List<ClassHourUpdateDTO> classHourRequests){
 			return classHourService.updateClassHours(classHourRequests);
 		}
 		

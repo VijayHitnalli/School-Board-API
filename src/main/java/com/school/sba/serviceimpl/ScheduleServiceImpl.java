@@ -55,6 +55,11 @@ public class ScheduleServiceImpl implements ScheduleService{
 				.lunchTime(schedule.getLunchTime())
 				.lunchLengthInMinutes((int) schedule.getLunchLengthInMinutes().toMinutes()).build();
 	}
+	
+	private Schedule deleteSchedule(Schedule schedule) {
+		scheduleRepository.delete(schedule);
+		return schedule;
+	}
 
 	@Override
 	public ResponseEntity<ResponseStructure<ScheduleResponse>> createSchedule(ScheduleRequest scheduleRequest,int schoolId) 
@@ -124,7 +129,7 @@ public class ScheduleServiceImpl implements ScheduleService{
 	    }).orElseThrow(() -> new RuntimeException("Schedule not found with ID: " + scheduleId));
 	}
 
-
+		
 	
 
 

@@ -1,5 +1,6 @@
 package com.school.sba.serviceimpl;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,11 +12,13 @@ import org.springframework.stereotype.Service;
 import com.school.sba.entity.School;
 import com.school.sba.entity.User;
 import com.school.sba.enums.UserRole;
+import com.school.sba.exception.SchoolNotFoundByIdException;
 import com.school.sba.exception.UserNotFoundByIdException;
 import com.school.sba.repository.SchoolRepository;
 import com.school.sba.repository.UserRepository;
 import com.school.sba.requestdto.SchoolRequest;
 import com.school.sba.requestdto.UserRequest;
+import com.school.sba.responsedto.AcademicProgramResponse;
 import com.school.sba.responsedto.SchoolResponse;
 import com.school.sba.responsedto.UserResponse;
 import com.school.sba.service.SchoolService;
@@ -76,5 +79,25 @@ public class SchoolServiceImpl implements SchoolService{
 				return new ResponseEntity<ResponseStructure<SchoolResponse>>(responseStructure,HttpStatus.BAD_REQUEST);
 			}
 		}).orElseThrow(()-> new UserNotFoundByIdException("Given UserId not found in the database"));
+	}
+
+	@Override
+	public ResponseEntity<ResponseStructure<SchoolResponse>> deleteSchoolById(int schoolId) {
+		return schoolRepository.findById(schoolId).map(school->{
+			
+		school.setIsDeleted(true);
+		School save = schoolRepository.save(school);
+		SchoolResponse response = mapToSchoolResponse(save);
+		responseStructure.setStatus(HttpStatus.OK.value());
+		responseStructure.setMessage("Data Deleted Successfully...!");
+		responseStructure.setData(response);
+		return new ResponseEntity<ResponseStructure<SchoolResponse>>(responseStructure, HttpStatus.OK);
+		
+		}).orElseThrow(()-> new SchoolNotFoundByIdException("School not found by given ID"));
+		
+	}
+	
+	public void autoDeleteSchool() {
+		
 	}
 }

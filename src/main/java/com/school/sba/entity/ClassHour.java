@@ -3,9 +3,13 @@ package com.school.sba.entity;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
+import org.springframework.stereotype.Component;
+
 import com.school.sba.enums.ClassStatus;
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -16,12 +20,14 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-@Entity
+
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
 @Setter
+@Entity
+@Component
 public class ClassHour {
 		@Id
 		@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -29,13 +35,12 @@ public class ClassHour {
 		private LocalDateTime beginsAt;
 		private LocalDateTime endsAt;
 		private int roomNo;
+		@Enumerated(EnumType.STRING)
 		private ClassStatus classStatus;
+		private Boolean isDeleted;
 		
 		@ManyToOne
 		private AcademicProgram academicProgram;
-		
-		@ManyToOne
-		private Schedule schedule;
 		
 		@ManyToOne
 		private User user;

@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -28,6 +29,12 @@ public class SchoolController {
 	@PostMapping("/schools")
 	public ResponseEntity<ResponseStructure<SchoolResponse>> registerSchool(@RequestBody SchoolRequest schoolRequest){
 		return schoolService.registerSchool(schoolRequest);
+	}
+	
+	@PreAuthorize("hasAuthority('ADMIN')")
+	@DeleteMapping("/schools/{schoolId}")
+	public ResponseEntity<ResponseStructure<SchoolResponse>> deleteSchoolById(@PathVariable int schoolId){
+		return schoolService.deleteSchoolById(schoolId);
 	}
 	
 	

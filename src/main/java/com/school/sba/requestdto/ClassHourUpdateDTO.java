@@ -1,7 +1,6 @@
 package com.school.sba.requestdto;
 
 import java.time.LocalDateTime;
-import java.time.LocalTime;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -14,9 +13,9 @@ import lombok.Setter;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class ClassHourRequest {
-	private LocalDateTime beginsAt;
-	private LocalDateTime endsAt;
+public class ClassHourUpdateDTO {
+	private int classHourID;
+	private int userID;
+	private int subjectId;
 	private int roomNo;
-	private String classStatus;
 }

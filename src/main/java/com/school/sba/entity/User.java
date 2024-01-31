@@ -2,10 +2,15 @@ package com.school.sba.entity;
 
 import java.util.List;
 
+import org.hibernate.annotations.Comment;
+import org.springframework.stereotype.Component;
+
 import com.school.sba.enums.UserRole;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -18,6 +23,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 @Builder
+@Component
 @Entity
 @Getter
 @Setter
@@ -37,8 +43,10 @@ public class User {
 		@Column(unique = true)
 		private String email;
 		private String password;
+		
+		@Enumerated(EnumType.STRING)
 		private UserRole role;
-		private Boolean isDeleted=false;
+		private Boolean isDeleted;
 		
 		@ManyToOne
 		private School school;

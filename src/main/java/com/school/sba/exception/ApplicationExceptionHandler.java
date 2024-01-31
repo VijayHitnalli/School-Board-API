@@ -80,6 +80,14 @@ public class ApplicationExceptionHandler extends ResponseEntityExceptionHandler{
 		public ResponseEntity<Object> handleDuplicateClassHour(DuplicateClassHourException exception){
 			return structure(HttpStatus.NOT_FOUND, exception.getMessage(), "ClassHour not found");
 		}
+		@ExceptionHandler(ClassHourNotFoundException.class)
+		public ResponseEntity<Object> handleClassHourNotFound(ClassHourNotFoundException exception){
+			return structure(HttpStatus.NOT_FOUND, exception.getMessage(), "ClassHour not found");
+		}
+		@ExceptionHandler(DataAlreadyExistException.class)
+		public ResponseEntity<Object> handleDataAlreadyExist(DataAlreadyExistException exception){
+			return structure(HttpStatus.ALREADY_REPORTED, exception.getMessage(), "ClassRoom Already Exist");
+		}
 		
 		
 		

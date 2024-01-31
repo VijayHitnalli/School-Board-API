@@ -1,5 +1,7 @@
 package com.school.sba.service;
 
+import java.util.List;
+
 import org.springframework.http.ResponseEntity;
 
 import com.school.sba.enums.UserRole;
@@ -20,5 +22,8 @@ public interface UserService {
 	public ResponseEntity<ResponseStructure<UserResponse>> addUserToAcademicProgram(int userId, int programId);
 
 	public ResponseEntity<ResponseStructure<UserResponse>> addSubjectToTeacher(int subjectId, int userId);
+
+	public ResponseEntity<ResponseStructure<List<UserResponse>>> fetchUsersByRole(UserRole role,int programId);
+
 
 }

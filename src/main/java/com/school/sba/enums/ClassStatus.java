@@ -7,6 +7,7 @@ public enum ClassStatus {
 			CANCELLED,
 			NOTSCHEDULED,
 			BREAKTIME,
-			LUNCHTIME
+			LUNCHTIME,
+			ONGOING
 			
 }
