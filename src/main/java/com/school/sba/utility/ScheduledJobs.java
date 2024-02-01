@@ -6,6 +6,7 @@ import org.springframework.stereotype.Component;
 
 import com.school.sba.serviceimpl.AcademicProgramServiceImpl;
 import com.school.sba.serviceimpl.ClassHourServiceImpl;
+import com.school.sba.serviceimpl.SchoolServiceImpl;
 import com.school.sba.serviceimpl.UserServiceImpl;
 
 @Component
@@ -19,7 +20,7 @@ public class ScheduledJobs {
 	@Autowired
 	private AcademicProgramServiceImpl academicProgramServiceImpl;
 	@Autowired
-	private ClassHourServiceImpl classHourServiceImpl;
+	private SchoolServiceImpl schoolServiceImpl;
 	
 	@Scheduled(fixedDelay = 1000l*60*2)
 	public void autoDelete() {
@@ -38,6 +39,16 @@ public class ScheduledJobs {
 		
 		if(academicProgramServiceImpl.hasSoftDeletedData()) {
 			academicProgramServiceImpl.autoDeleteAcademicProgram();
+		}
+		else {
+			System.out.println("No soft-deleted data found. Skipping auto deletion.");
+		}
+	}
+	@Scheduled(fixedDelay = 1000l*60*1)
+	public void autoDeleteSchool() {
+		
+		if(schoolServiceImpl.hasSoftDeletedData()) {
+		schoolServiceImpl.autoDeleteSchool();
 		}
 		else {
 			System.out.println("No soft-deleted data found. Skipping auto deletion.");

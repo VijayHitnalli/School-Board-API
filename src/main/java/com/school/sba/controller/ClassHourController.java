@@ -36,9 +36,10 @@ public class ClassHourController {
 		public ResponseEntity<ResponseStructure<ClassHourResponse>> addClassHourToAcademicProgram(@PathVariable int programId,@RequestBody ClassHourRequest classHourRequest){
 			return classHourService.addClassHourToAcademicProgram(programId,classHourRequest);
 		}
-		@PutMapping(" /class-hours")
+		@PutMapping("/class-hours")
 		public ResponseEntity<ResponseStructure<List<ClassHourResponse>>> updateClassHours(List<ClassHourUpdateDTO> classHourRequests){
 			return classHourService.updateClassHours(classHourRequests);
 		}
-		
+		@PutMapping("")
+		public ResponseEntity<ResponseStructure<List<ClassHourResponse>>> updateClassHourWeekly()
 }

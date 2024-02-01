@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import com.school.sba.entity.AcademicProgram;
+import com.school.sba.entity.School;
 import com.school.sba.entity.User;
 import com.school.sba.enums.UserRole;
 
@@ -18,4 +19,10 @@ public interface UserRepository extends JpaRepository<User, Integer> {
 	public List<User> findByRoleAndAcademicPrograms(UserRole role, AcademicProgram academicProgram);
 
 	public List<User> findByIsDeleted(boolean isDeleted);
+	
+	 List<User> findBySchool(School school);
+	 
+	 public List<User> findByRole(UserRole role);
+	 
+	 public List<User> findByRoleNot(UserRole role);
 }
