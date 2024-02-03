@@ -1,5 +1,6 @@
 package com.school.sba.serviceimpl;
 
+import java.io.ByteArrayOutputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.time.DayOfWeek;
@@ -16,8 +17,10 @@ import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.school.sba.entity.AcademicProgram;
 import com.school.sba.entity.ClassHour;
@@ -301,5 +304,65 @@ public class ClassHourServiceImpl implements ClassHourService {
 		
 		return new ResponseEntity<ResponseStructure<String>>(responseStructure,HttpStatus.CREATED);
 	}
+
+	@Override
+	public ResponseEntity<?> writeToExcelSheet(int programId, LocalDate fromDate, LocalDate toDate,
+			MultipartFile file) throws IOException {
+		Optional<AcademicProgram> optional = academicProgramRepository.findById(programId);
+		AcademicProgram program = optional.get();
+		
+		LocalDateTime from = fromDate.atTime(LocalTime.MIDNIGHT);
+		LocalDateTime to = toDate.atTime(LocalTime.MIDNIGHT).plusDays(1);
+
+		List<ClassHour> classHours = classHourRepository.findAllByAcademicProgramAndBeginsAtBetween(program, from, to);
+		
+		DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm");
+		DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("YYYY-MM-dd");
+		
+		XSSFWorkbook workbook=new XSSFWorkbook(file.getInputStream());
+		
+		workbook.forEach(sheet->{
+			int rowNumber=0;
+			Row header = sheet.createRow(rowNumber);
+			header.createCell(0).setCellValue("Date");
+			header.createCell(1).setCellValue("Begins At");
+			header.createCell(2).setCellValue("Ends At");
+			header.createCell(3).setCellValue("Subject");
+			header.createCell(1).setCellValue("Teacher");
+			header.createCell(4).setCellValue("Room Number");
+			
+			for(ClassHour classHour:classHours) {
+				Row row = sheet.createRow(++rowNumber);
+				row.createCell(0).setCellValue(dateFormatter.format(classHour.getBeginsAt()));
+				row.createCell(1).setCellValue(timeFormatter.format(classHour.getBeginsAt()));
+				row.createCell(2).setCellValue(timeFormatter.format(classHour.getEndsAt()));
+				if(classHour.getSubject().getSubjectName()==null) {
+					row.createCell(3).setCellValue("");
+				}else {
+					row.createCell(3).setCellValue(classHour.getSubject().getSubjectName());
+				}
+				if(classHour.getUser().getUserName()==null) {
+					row.createCell(4).setCellValue("");
+
+				}else {
+					row.createCell(4).setCellValue(classHour.getUser().getUserName());
+				}
+				row.createCell(5).setCellValue(classHour.getRoomNo());
+			}
+			
+		});
+		
+		ByteArrayOutputStream outputStream= new ByteArrayOutputStream();
+		workbook.write(outputStream);
+		workbook.close();
+		
+		byte[] byteDate=outputStream.toByteArray();
+		
+		return ResponseEntity.ok().header("Content Disposition","attachment; filename="+file.getOriginalFilename())
+				.contentType(MediaType.APPLICATION_OCTET_STREAM)
+				.body(byteDate);
+	}
+
+
 
 }

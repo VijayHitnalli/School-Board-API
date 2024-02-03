@@ -6,6 +6,7 @@ import java.util.List;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.school.sba.requestdto.ClassHourRequest;
 import com.school.sba.requestdto.ClassHourUpdateDTO;
@@ -23,5 +24,7 @@ public interface ClassHourService {
 
 
 	ResponseEntity<ResponseStructure<String>> xlSheetGeneration(int programId, ExcelRequestDto excelRequestDto) throws IOException, IOException;
+
+	ResponseEntity<?> writeToExcelSheet(int programId, LocalDate fromDate, LocalDate toDate, MultipartFile file) throws IOException;
 
 }

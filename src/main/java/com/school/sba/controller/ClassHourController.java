@@ -10,7 +10,9 @@ import org.springframework.security.config.annotation.method.configuration.Enabl
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.school.sba.repository.AcademicProgramRepository;
 import com.school.sba.repository.ClassHourRepository;
@@ -44,9 +46,14 @@ public class ClassHourController {
 			return classHourService.updateClassHours(classHourRequests);
 		}
 		
-		@PostMapping("/academic-program/{programId}/class-hours/write-excel")
+		@PostMapping("/academic-program/{programId}/class-hours/write-excel") //standalone Applicatipons
 		public ResponseEntity<ResponseStructure<String>> xlSheetGeneration(@PathVariable int programId,@RequestBody ExcelRequestDto excelRequestDto) throws IOException{
 			return classHourService.xlSheetGeneration(programId,excelRequestDto);
+		}
+		
+		@PostMapping("/academic-program/{programId}/class-hours/from/{fromDate}/to/{toDate}/write-excel")
+		public ResponseEntity<?> writeToExcelSheet(@PathVariable int programId, @PathVariable LocalDate fromDate,@PathVariable LocalDate toDate,  @RequestParam MultipartFile file) throws IOException{
+			return classHourService.writeToExcelSheet(programId,fromDate,toDate,file);
 
 		}
 }
