@@ -1,6 +1,6 @@
 package com.school.sba.entity;
 
-import java.time.LocalDate;
+
 import java.time.LocalDateTime;
 
 import org.springframework.stereotype.Component;
@@ -20,7 +20,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
@@ -29,22 +28,21 @@ import lombok.Setter;
 @Entity
 @Component
 public class ClassHour {
-		@Id
-		@GeneratedValue(strategy = GenerationType.IDENTITY)
-		private int classHourId;
-		private LocalDateTime beginsAt;
-		private LocalDateTime endsAt;
-		private int roomNo;
-		@Enumerated(EnumType.STRING)
-		private ClassStatus classStatus;
-		private Boolean isDeleted;
-		
-		@ManyToOne
-		private AcademicProgram academicProgram;
-		
-		@ManyToOne
-		private User user;
-		
-		@ManyToOne
-		private Subject subject;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private int classHourId;
+	private LocalDateTime beginsAt;
+	private LocalDateTime endsAt;
+	private int roomNo;
+	@Enumerated(EnumType.STRING)
+	private ClassStatus classStatus;
+
+	@ManyToOne
+	private AcademicProgram academicProgram;
+
+	@ManyToOne
+	private User user;
+
+	@ManyToOne
+	private Subject subject;
 }

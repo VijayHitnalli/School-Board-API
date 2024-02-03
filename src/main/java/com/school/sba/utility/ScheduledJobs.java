@@ -1,9 +1,14 @@
 package com.school.sba.utility;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
+import com.school.sba.entity.AcademicProgram;
+import com.school.sba.repository.AcademicProgramRepository;
+import com.school.sba.repository.ClassHourRepository;
 import com.school.sba.serviceimpl.AcademicProgramServiceImpl;
 import com.school.sba.serviceimpl.ClassHourServiceImpl;
 import com.school.sba.serviceimpl.SchoolServiceImpl;
@@ -21,8 +26,14 @@ public class ScheduledJobs {
 	private AcademicProgramServiceImpl academicProgramServiceImpl;
 	@Autowired
 	private SchoolServiceImpl schoolServiceImpl;
+	@Autowired
+	private ClassHourServiceImpl classHourServiceImpl;
+	@Autowired
+	private ClassHourRepository classHourRepository;
+	@Autowired
+	private AcademicProgramRepository academicProgramRepository;
 	
-	@Scheduled(fixedDelay = 1000l*60*2)
+	@Scheduled(cron = "0 0 0 * * 1")
 	public void autoDelete() {
 		
 		if(userServiceImpl.hasSoftDeletedData()) {
@@ -34,7 +45,7 @@ public class ScheduledJobs {
 		}
 	}
 	
-	@Scheduled(fixedDelay = 1000l*60*1)
+	@Scheduled(cron = "0 0 0 * * 1")
 	public void autoDeleteAcademicProgram() {
 		
 		if(academicProgramServiceImpl.hasSoftDeletedData()) {
@@ -44,7 +55,7 @@ public class ScheduledJobs {
 			System.out.println("No soft-deleted data found. Skipping auto deletion.");
 		}
 	}
-	@Scheduled(fixedDelay = 1000l*60*1)
+	@Scheduled(cron = "0 0 0 * * 1")
 	public void autoDeleteSchool() {
 		
 		if(schoolServiceImpl.hasSoftDeletedData()) {
@@ -53,6 +64,12 @@ public class ScheduledJobs {
 		else {
 			System.out.println("No soft-deleted data found. Skipping auto deletion.");
 		}
+	}
+	
+	@Scheduled(cron = "0 0 0 * * 1")
+	public void autoUpdateClassHour() {
+		classHourServiceImpl.generateWeeklyClassHours();
+		System.out.println("Updated");
 	}
 	
 	

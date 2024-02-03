@@ -110,7 +110,7 @@ public class AcademicProgramServiceImpl implements AcademicProgramService {
 	@Override
 	public ResponseEntity<ResponseStructure<AcademicProgramResponse>> deleteAcademicProgramById(int programId) {
 		return academicProgramRepository.findById(programId).map(program->{
-			program.setIsDeleted(true);
+			program.setDeleted(true);
 			AcademicProgram program2 = academicProgramRepository.save(program);
 			AcademicProgramResponse response = mapToAcademicProgramResponse(program2);
 			responseStructure.setStatus(HttpStatus.OK.value());
@@ -136,6 +136,26 @@ public class AcademicProgramServiceImpl implements AcademicProgramService {
 	        academicProgramRepository.delete(deletedAcademicProgram);
 	    }
 	    return !programs.isEmpty();
+	}
+	
+	@Override
+	public ResponseEntity<ResponseStructure<AcademicProgramResponse>> autoRepeatScheduleON(int programId,boolean autoRepeateScheduled) {
+		
+		return academicProgramRepository.findById(programId).map(program->{
+			
+			if(!program.isDeleted()) {
+				program.setAutoRepeatSchedule(autoRepeateScheduled);
+				program.setProgramId(programId);
+				academicProgramRepository.save(program);
+				
+				responseStructure.setStatus(HttpStatus.OK.value());
+				responseStructure.setMessage("Auto Repeat Schedule: ON");
+				responseStructure.setData(mapToAcademicProgramResponse(program));
+			
+				return new ResponseEntity<ResponseStructure<AcademicProgramResponse>>(responseStructure,HttpStatus.OK);  
+			}
+			throw new IllegalArgumentException("Program Already DELETED");			
+		}).orElseThrow(()->new AcademicProgramNotFoundByIdException("Program not present for Given Id"));
 	}
 	
 

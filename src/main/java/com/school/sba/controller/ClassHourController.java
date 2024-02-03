@@ -1,8 +1,8 @@
 package com.school.sba.controller;
 
-import java.util.HashSet;
+import java.io.IOException;
+import java.time.LocalDate;
 import java.util.List;
-import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -12,10 +12,11 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.school.sba.exception.DuplicateClassHourException;
+import com.school.sba.repository.AcademicProgramRepository;
 import com.school.sba.repository.ClassHourRepository;
 import com.school.sba.requestdto.ClassHourRequest;
 import com.school.sba.requestdto.ClassHourUpdateDTO;
+import com.school.sba.requestdto.ExcelRequestDto;
 import com.school.sba.responsedto.ClassHourResponse;
 import com.school.sba.service.ClassHourService;
 import com.school.sba.utility.ResponseStructure;
@@ -31,6 +32,8 @@ public class ClassHourController {
 	
 	@Autowired
 	private ClassHourRepository classHourRepository;
+	@Autowired
+	private AcademicProgramRepository academicProgramRepository;
 	
 		@PostMapping("/academic-program/{programId}/class-hours")
 		public ResponseEntity<ResponseStructure<ClassHourResponse>> addClassHourToAcademicProgram(@PathVariable int programId,@RequestBody ClassHourRequest classHourRequest){
@@ -40,6 +43,10 @@ public class ClassHourController {
 		public ResponseEntity<ResponseStructure<List<ClassHourResponse>>> updateClassHours(List<ClassHourUpdateDTO> classHourRequests){
 			return classHourService.updateClassHours(classHourRequests);
 		}
-		@PutMapping("")
-		public ResponseEntity<ResponseStructure<List<ClassHourResponse>>> updateClassHourWeekly()
+		
+		@PostMapping("/academic-program/{programId}/class-hours/write-excel")
+		public ResponseEntity<ResponseStructure<String>> xlSheetGeneration(@PathVariable int programId,@RequestBody ExcelRequestDto excelRequestDto) throws IOException{
+			return classHourService.xlSheetGeneration(programId,excelRequestDto);
+
+		}
 }

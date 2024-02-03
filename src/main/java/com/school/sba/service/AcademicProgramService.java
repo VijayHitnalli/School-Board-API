@@ -17,6 +17,9 @@ public interface AcademicProgramService {
 
 	public ResponseEntity<ResponseStructure<AcademicProgramResponse>> deleteAcademicProgramById(int programId);
 
+	public ResponseEntity<ResponseStructure<AcademicProgramResponse>> autoRepeatScheduleON(int programId,
+			boolean autoRepeateScheduled);
+
 	
 
 }

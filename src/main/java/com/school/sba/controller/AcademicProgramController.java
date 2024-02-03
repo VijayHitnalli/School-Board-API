@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.school.sba.requestdto.AcademicProgramRequest;
@@ -38,5 +39,10 @@ public class AcademicProgramController {
 	@PreAuthorize("hasAuthority('ADMIN')")
 	public ResponseEntity<ResponseStructure<AcademicProgramResponse>> deleteAcademicProgramById(@PathVariable int programId){
 		return academicProgramService.deleteAcademicProgramById(programId);
+	}
+	@PreAuthorize("hasAuthority('ADMIN')")
+	@PutMapping("/academic-program/{programId}")
+	public ResponseEntity<ResponseStructure<AcademicProgramResponse>> autoRepeatScheduleON(@PathVariable int programId,@RequestParam("auto-repeate-schedule")boolean autoRepeateScheduled){
+		return academicProgramService.autoRepeatScheduleON(programId,autoRepeateScheduled);
 	}
 }

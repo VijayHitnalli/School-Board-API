@@ -3,6 +3,7 @@ package com.school.sba.entity;
 import java.time.LocalDate;
 import java.util.List;
 
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 import com.school.sba.enums.ProgramType;
@@ -39,7 +40,10 @@ public class AcademicProgram {
 	private ProgramType programType;
 	private LocalDate beginsAt;
 	private LocalDate endsAt;
-	private Boolean isDeleted;
+	private boolean isDeleted;
+	
+	private boolean isAutoRepeatSchedule;
+	
 	@ManyToOne
 	private School school;
 	@ManyToMany

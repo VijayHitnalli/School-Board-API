@@ -23,4 +23,5 @@ public class AcademicProgramResponse {
 	private LocalDate endsAt;
 	private boolean isDeleted;
 	private List<String> subjects;
+	private boolean autoRepeateScheduled;
 }

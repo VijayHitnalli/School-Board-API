@@ -9,5 +9,6 @@ import com.school.sba.entity.User;
 
 public interface AcademicProgramRepository extends JpaRepository<AcademicProgram, Integer>{
 	public List<AcademicProgram> findByIsDeleted(boolean isDeleted);
+	public List<AcademicProgram> findByisAutoRepeatSchedule(boolean isAutoRepeatSchedule);
 
 }

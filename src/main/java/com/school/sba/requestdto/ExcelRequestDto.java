@@ -1,7 +1,6 @@
 package com.school.sba.requestdto;
 
-import java.time.LocalDateTime;
-import java.time.LocalTime;
+import java.time.LocalDate;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -11,12 +10,11 @@ import lombok.Setter;
 
 @Getter
 @Setter
-@Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class ClassHourRequest {
-	private int userId;
-	private int subjectId;
-	private int roomNo;
-	private int classHourId;
+@Builder
+public class ExcelRequestDto {
+	private LocalDate fromDate;
+	private LocalDate toDate;
+	private String filePath;
 }

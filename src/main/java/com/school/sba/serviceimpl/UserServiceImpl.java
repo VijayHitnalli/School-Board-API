@@ -16,7 +16,6 @@ import com.school.sba.entity.Subject;
 import com.school.sba.entity.User;
 import com.school.sba.enums.UserRole;
 import com.school.sba.exception.AcademicProgramNotFoundByIdException;
-import com.school.sba.exception.AccessDeniedException;
 import com.school.sba.exception.DataNotFoundException;
 import com.school.sba.exception.InvalidUserRoleException;
 import com.school.sba.exception.SchoolNotFoundByIdException;
@@ -27,7 +26,6 @@ import com.school.sba.repository.SchoolRepository;
 import com.school.sba.repository.SubjectRepository;
 import com.school.sba.repository.UserRepository;
 import com.school.sba.requestdto.UserRequest;
-import com.school.sba.responsedto.AcademicProgramResponse;
 import com.school.sba.responsedto.UserResponse;
 import com.school.sba.service.UserService;
 import com.school.sba.utility.ResponseStructure;
@@ -53,8 +51,6 @@ public class UserServiceImpl implements UserService {
 	private ClassHour classHour;
 	@Autowired
 	private ClassHourRepository classHourRepository;
-	
-	
 
 	private User mapToUserRequest(UserRequest userRequest) {
 		return User.builder().userName(userRequest.getUserName()).firstName(userRequest.getFirstName())
@@ -72,7 +68,6 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public ResponseEntity<ResponseStructure<UserResponse>> registerAdmin(UserRequest userRequest) {
 		User user = mapToUserRequest(userRequest);
-		
 
 		if (user.getRole() == UserRole.ADMIN) {
 			if (userRepository.existsByRole(UserRole.ADMIN)) {
@@ -106,7 +101,7 @@ public class UserServiceImpl implements UserService {
 			return schoolRepository.findById(adminuser.getSchool().getSchoolId()).map(school -> {
 
 				if (!userRequest.getRole().equals(UserRole.TEACHER)) {
-						 
+
 					User user = mapToUserRequest(userRequest);
 					user.setSchool(school);
 					userRepository.save(user);
@@ -139,48 +134,45 @@ public class UserServiceImpl implements UserService {
 
 		return new ResponseEntity<ResponseStructure<UserResponse>>(responseStructure, HttpStatus.FOUND);
 	}
-	
-	
+
 	public void autoDeleteUser() {
-	    List<User> deletedUsers = userRepository.findByIsDeleted(true);
-	   
-	    for (User deletedUser : deletedUsers) {
-	       
-	       List<AcademicProgram> academicPrograms = deletedUser.getAcademicPrograms();
-	        
-	      for(AcademicProgram programs:academicPrograms) {
-	    	  
-		    List<ClassHour> classHours = academicProgram.getClassHours();
-		        
-		        for (ClassHour classHour : classHours) {
-		            classHour.setAcademicProgram(null);
-		        }
-	      }
-	        academicProgram.getUsers().remove(deletedUser);
-	       
-	        userRepository.delete(deletedUser);
-	    }
+		List<User> deletedUsers = userRepository.findByIsDeleted(true);
+
+		for (User deletedUser : deletedUsers) {
+
+			List<AcademicProgram> academicPrograms = deletedUser.getAcademicPrograms();
+
+			for (AcademicProgram programs : academicPrograms) {
+
+				List<ClassHour> classHours = academicProgram.getClassHours();
+
+				for (ClassHour classHour : classHours) {
+					classHour.setAcademicProgram(null);
+				}
+			}
+			academicProgram.getUsers().remove(deletedUser);
+
+			userRepository.delete(deletedUser);
+		}
 	}
 
-	
 	public boolean hasSoftDeletedData() {
-	    List<User> deletedUsers = userRepository.findByIsDeleted(true);
-	    for (User deletedUser : deletedUsers) {
-	        userRepository.delete(deletedUser);
-	    }
-	    return !deletedUsers.isEmpty();
+		List<User> deletedUsers = userRepository.findByIsDeleted(true);
+		for (User deletedUser : deletedUsers) {
+			userRepository.delete(deletedUser);
+		}
+		return !deletedUsers.isEmpty();
 	}
-	
 
 	@Override
 	public ResponseEntity<ResponseStructure<UserResponse>> deleteUserById(int userId) {
 
 		User user = userRepository.findById(userId)
 				.orElseThrow(() -> new UserNotFoundByIdException("Given userId->" + userId + " Not Found"));
-		if(user.getRole().equals(UserRole.ADMIN)) {
+		if (user.getRole().equals(UserRole.ADMIN)) {
 			throw new IllegalArgumentException("ADMIN cannot Be Deleted");
 		}
-		
+
 		user.setIsDeleted(true);
 
 		User user2 = userRepository.save(user);
@@ -192,19 +184,18 @@ public class UserServiceImpl implements UserService {
 		return new ResponseEntity<ResponseStructure<UserResponse>>(responseStructure, HttpStatus.OK);
 	}
 
-	
-
-	
 	@Override
 	public ResponseEntity<ResponseStructure<UserResponse>> addUserToAcademicProgram(int userId, int programId) {
-		User user = userRepository.findById(userId).orElseThrow(()-> new UserNotFoundByIdException("User Not Present for given user id"));
+		User user = userRepository.findById(userId)
+				.orElseThrow(() -> new UserNotFoundByIdException("User Not Present for given user id"));
 
-		AcademicProgram program = academicProgramRepository.findById(programId).orElseThrow(()-> new AcademicProgramNotFoundByIdException("Program Not present for given  program id"));
+		AcademicProgram program = academicProgramRepository.findById(programId).orElseThrow(
+				() -> new AcademicProgramNotFoundByIdException("Program Not present for given  program id"));
 
 		List<Subject> subjects = program.getSubjects();
 
-		if(user.getSubject()!=null && user.getRole().equals(UserRole.TEACHER) &&  subjects.contains(user.getSubject()))
-		{
+		if (user.getSubject() != null && user.getRole().equals(UserRole.TEACHER)
+				&& subjects.contains(user.getSubject())) {
 			user.getAcademicPrograms().add(program);
 			userRepository.save(user);
 			program.getUsers().add(user);
@@ -214,11 +205,10 @@ public class UserServiceImpl implements UserService {
 			responseStructure.setMessage("User added to Academic Programs");
 			responseStructure.setData(mapToUserResponse(user));
 
-			return new ResponseEntity<ResponseStructure<UserResponse>>(responseStructure,HttpStatus.OK);
+			return new ResponseEntity<ResponseStructure<UserResponse>>(responseStructure, HttpStatus.OK);
 		}
 
-		else if(user.getRole().equals(UserRole.STUDENT))
-		{
+		else if (user.getRole().equals(UserRole.STUDENT)) {
 			user.getAcademicPrograms().add(program);
 			userRepository.save(user);
 			program.getUsers().add(user);
@@ -228,9 +218,8 @@ public class UserServiceImpl implements UserService {
 			responseStructure.setMessage("User added to Academic Programs");
 			responseStructure.setData(mapToUserResponse(user));
 
-			return new ResponseEntity<ResponseStructure<UserResponse>>(responseStructure,HttpStatus.OK);
-		}
-		else
+			return new ResponseEntity<ResponseStructure<UserResponse>>(responseStructure, HttpStatus.OK);
+		} else
 
 			throw new InvalidUserRoleException("Admin cannot be assigned to any Academic Programs");
 	}
@@ -239,7 +228,7 @@ public class UserServiceImpl implements UserService {
 	public ResponseEntity<ResponseStructure<UserResponse>> addSubjectToTeacher(int subjectId, int userId) {
 
 		return userRepository.findById(userId).map(user -> {
-			if (user.getRole().equals(UserRole.TEACHER)&& user.getSubject()==null) {
+			if (user.getRole().equals(UserRole.TEACHER) && user.getSubject() == null) {
 				subjectRepository.findById(subjectId).map(subject -> {
 
 					user.setSubject(subject);
@@ -257,33 +246,29 @@ public class UserServiceImpl implements UserService {
 		}).orElseThrow(() -> new UserNotFoundByIdException("User Not Present for given user id"));
 	}
 
-
 	@Override
-	public ResponseEntity<ResponseStructure<List<UserResponse>>> fetchUsersByRole(UserRole role,int programId) {
-		
-		if(role.equals(UserRole.ADMIN)) {
+	public ResponseEntity<ResponseStructure<List<UserResponse>>> fetchUsersByRole(UserRole role, int programId) {
+
+		if (role.equals(UserRole.ADMIN)) {
 			throw new InvalidUserRoleException("Cannot fetch users for ADMIN role");
 		}
-		return academicProgramRepository.findById(programId).map(program->{
-		    List<User> users = userRepository.findByRoleAndAcademicPrograms(role, program);
-		    
-			List<UserResponse> responses=new ArrayList<>();
-			
-			for(User user:users) {
-				UserResponse response=mapToUserResponse(user);
+		return academicProgramRepository.findById(programId).map(program -> {
+			List<User> users = userRepository.findByRoleAndAcademicPrograms(role, program);
+
+			List<UserResponse> responses = new ArrayList<>();
+
+			for (User user : users) {
+				UserResponse response = mapToUserResponse(user);
 				responses.add(response);
 			}
 			ResponseStructure<List<UserResponse>> structure = new ResponseStructure<>();
 			structure.setStatus(HttpStatus.FOUND.value());
 			structure.setMessage("Data found Successfully...!");
 			structure.setData(responses);
-			return new ResponseEntity<ResponseStructure<List<UserResponse>>>(structure,HttpStatus.FOUND);
-			
-		}).orElseThrow(()-> new AcademicProgramNotFoundByIdException("Not found"));
-			
+			return new ResponseEntity<ResponseStructure<List<UserResponse>>>(structure, HttpStatus.FOUND);
+
+		}).orElseThrow(() -> new AcademicProgramNotFoundByIdException("Not found"));
+
 	}
-
-	
-
 
 }
